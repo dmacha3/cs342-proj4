@@ -16,13 +16,14 @@ import javafx.scene.control.ListView;
 
 public class Server {
 
+    ServerSocket mysocket;
     int count = 1;
     ArrayList<ClientThread> players = new ArrayList<ClientThread>();
     TheServer server;
     private Consumer<Serializable> callback;
 
-    Server(Consumer<Serializable> call) {
-
+    Server(Consumer<Serializable> call, ServerSocket socket) {
+        this.mysocket = socket;
         callback = call;
         server = new TheServer();
         server.start();
@@ -32,16 +33,14 @@ public class Server {
 
         public void run() {
 
-            try (ServerSocket mysocket = new ServerSocket(5555);) {
-                System.out.println("Server is waiting for a client!");
+            try{
+                callback.accept("Server is waiting for a client!");
 
                 while (true) {
-
                     ClientThread c = new ClientThread(mysocket.accept(), count);
                     callback.accept("client has connected to server: " + "client #" + count);
                     players.add(c);
                     c.start();
-
                     count++;
 
                 }
