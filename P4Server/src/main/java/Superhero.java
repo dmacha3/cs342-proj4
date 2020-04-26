@@ -5,11 +5,11 @@ public class Superhero extends Category {
     @Override
     protected void setWords() {
         super.allWords = new ArrayList<>();
-        super.allWords.add("spider-man");
-        super.allWords.add("iron man");
+        super.allWords.add("spiderman");
+        super.allWords.add("ironman");
         super.allWords.add("batman");
         super.allWords.add("superman");
-        super.allWords.add("wonder woman");
+        super.allWords.add("wonderwoman");
         super.allWords.add("wolverine");
 
     }
