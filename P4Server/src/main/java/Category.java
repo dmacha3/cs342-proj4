@@ -101,7 +101,7 @@ public abstract class Category {
         this.currentWord = null;
         this.categoryGuessed = false;
         this.numberOfLettersGuessed = 0;
-        this.numberOfGuesses = 0;
+        this.numberOfInvalidGuesses = 0;
         this.indexesToUpdateForCurrentGuess.clear();
     }
 

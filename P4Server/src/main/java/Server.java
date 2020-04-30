@@ -30,7 +30,7 @@ public class Server {
         public void run() {
 
             try{
-                callback.accept("Server is waiting for a client!");
+                callback.accept("Server is waiting for a players on port number " + mysocket.getLocalPort());
 
                 while (true) {
                     ClientThread c = new ClientThread(mysocket.accept(), count);
