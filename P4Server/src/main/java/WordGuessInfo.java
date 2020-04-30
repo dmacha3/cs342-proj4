@@ -1,4 +1,5 @@
 import java.io.Serializable;
+import java.util.ArrayList;
 
 public class WordGuessInfo implements Serializable {
 
@@ -11,10 +12,13 @@ public class WordGuessInfo implements Serializable {
     // For current word guess
     public char guessedLetter;
 
-    // If -1, the player did not guess letter
-    public int letterLocation;
+    public ArrayList<Integer> indexesToUpdate;
 
-    public int guessesLeft;
+    public int currentWordLength;
+
+    public boolean wasLetterGuessed;
+
+    public int numberOfInvalidGuesses;
 
     public String currentCategory;
 
@@ -27,18 +31,21 @@ public class WordGuessInfo implements Serializable {
 
     public boolean gameOver;
 
+    public boolean gameWon;
+
     public WordGuessInfo() {
         super();
         this.connected = false;
         this.guessedLetter = '0';
-        this.letterLocation = -1;
-        this.guessesLeft = 6;
+        this.numberOfInvalidGuesses = 0;
+        this.indexesToUpdate = null;
+        this.currentWordLength = 0;
         this.currentCategory = null;
         this.animalCategoryPassed = false;
         this.countryCategoryPassed = false;
         this.superheroCategoryPassed = false;
         this.gameOver = false;
-
+        this.gameWon = false;
     }
 
 }

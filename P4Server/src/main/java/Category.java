@@ -1,13 +1,15 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Random;
 
 public abstract class Category {
 
     private String currentWord;
+    private ArrayList<Integer> indexesToUpdateForCurrentGuess;
     private ArrayList<String> wordsUsed;
     private boolean categoryGuessed;
     private int numberOfLettersGuessed;
-    private int numberOfGuesses;
+    private int numberOfInvalidGuesses;
 
     protected ArrayList<String> allWords;
 
@@ -18,7 +20,8 @@ public abstract class Category {
         this.currentWord = null;
         this.categoryGuessed = false;
         this.numberOfLettersGuessed = 0;
-        this.numberOfGuesses = 0;
+        this.numberOfInvalidGuesses = 0;
+        this.indexesToUpdateForCurrentGuess = new ArrayList<Integer>();
     }
 
     public void setCurrentWord() {
@@ -30,16 +33,32 @@ public abstract class Category {
         }
 
         // Set currentWord random words from allWords
-        Random r = new Random();
-        int randomIndex = r.nextInt(allWords.size());
-        this.currentWord = this.allWords.get(randomIndex);
-        this.wordsUsed.add(this.allWords.get(randomIndex));
-        this.allWords.remove(randomIndex);
+        // Random r = new Random();
+        // int randomIndex = r.nextInt(allWords.size());
+        // this.currentWord = this.allWords.get(randomIndex);
+        // this.wordsUsed.add(this.allWords.get(randomIndex));
+        // this.allWords.remove(randomIndex);
+
+        this.currentWord = this.allWords.get(0);
+        this.wordsUsed.add(this.allWords.get(0));
+        this.allWords.remove(0);
+
     }
 
     public boolean checkLetter(char letter) {
+
+        this.indexesToUpdateForCurrentGuess.clear();
+
+        // First check if there is at least one occurance of letter
         if (this.currentWord.indexOf(letter) > 0) {
-            this.numberOfLettersGuessed++;
+
+            // Now loop over every letter in case there are multiple same letter
+            for (int i = 0; i < this.currentWord.length(); i++) {
+                if (this.currentWord.charAt(i) == letter) {
+                    this.numberOfLettersGuessed++;
+                    this.indexesToUpdateForCurrentGuess.add(i);
+                }
+            }
 
             if (this.numberOfLettersGuessed == this.currentWord.length()) {
                 this.categoryGuessed = true;
@@ -48,7 +67,13 @@ public abstract class Category {
             return true;
 
         } else {
-            this.numberOfGuesses++;
+            this.numberOfInvalidGuesses++;
+
+            // If user guessed 6 times
+            // set currentWord to null that would indicate that user did not guess word
+            if (this.numberOfInvalidGuesses == 7) {
+                this.currentWord = null;
+            }
 
             return false;
         }
@@ -58,6 +83,45 @@ public abstract class Category {
     // Category has been guessed already
     public boolean isCategoryGuessed() {
         return this.categoryGuessed;
+    }
+
+    // Return current word length
+    public int getCurrentWordLenght() {
+        if (this.currentWord != null) {
+            return this.currentWord.length();
+        }
+        return -1;
+    }
+
+    public String getCurrentWord() {
+        return this.currentWord;
+    }
+
+    public void resetForNextGame() {
+        this.currentWord = null;
+        this.categoryGuessed = false;
+        this.numberOfLettersGuessed = 0;
+        this.numberOfGuesses = 0;
+        this.indexesToUpdateForCurrentGuess.clear();
+    }
+
+    public boolean categoryFailed() {
+        if (this.wordsUsed.size() == 3) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public void copyIndexesToUpdateForCurrentGuess(ArrayList<Integer> from) {
+
+        for (int i = 0; i < this.indexesToUpdateForCurrentGuess.size(); i++) {
+            from.add(this.indexesToUpdateForCurrentGuess.get(i));
+        }
+    }
+
+    public int getNumberOfInvalidGuesses(){
+        return this.numberOfInvalidGuesses;
     }
 
 }
