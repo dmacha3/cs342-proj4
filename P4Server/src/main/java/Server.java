@@ -29,12 +29,12 @@ public class Server {
 
         public void run() {
 
-            try{
+            try {
                 callback.accept("Server is waiting for a players on port number " + mysocket.getLocalPort());
 
                 while (true) {
                     ClientThread c = new ClientThread(mysocket.accept(), count);
-                    callback.accept("client has connected to server: " + "client #" + count);
+                    callback.accept("Player with ID " + count + " has connected to server.");
                     players.add(c);
                     c.start();
                     count++;
@@ -117,15 +117,8 @@ public class Server {
 
                 } catch (Exception e) {
 
-                    // Update view with message......
-                    // Todo
+                    callback.accept("Player with ID " + count + " has disconnected from server.");
 
-                    // callback.accept(
-                    // "OOOOPPs...Something wrong with the socket from client: " + count +
-                    // "....closing down!");
-                    // updateClients("Client #" + count + " has left the server!");
-
-                    // Remove player
                     players.remove(this);
                     break;
                 }
