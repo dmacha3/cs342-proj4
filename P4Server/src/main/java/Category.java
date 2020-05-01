@@ -22,6 +22,7 @@ public abstract class Category {
         this.numberOfLettersGuessed = 0;
         this.numberOfInvalidGuesses = 0;
         this.indexesToUpdateForCurrentGuess = new ArrayList<Integer>();
+        this.wordsUsed = new ArrayList<String>();
     }
 
     public void setCurrentWord() {
@@ -50,7 +51,7 @@ public abstract class Category {
         this.indexesToUpdateForCurrentGuess.clear();
 
         // First check if there is at least one occurance of letter
-        if (this.currentWord.indexOf(letter) > 0) {
+        if (this.currentWord.indexOf(letter) > -1) {
 
             // Now loop over every letter in case there are multiple same letter
             for (int i = 0; i < this.currentWord.length(); i++) {

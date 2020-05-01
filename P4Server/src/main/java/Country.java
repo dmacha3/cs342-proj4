@@ -2,6 +2,11 @@ import java.util.ArrayList;
 
 public class Country extends Category {
 
+    public Country() {
+        super();
+        this.setWords();
+    }
+
     @Override
     protected void setWords() {
         super.allWords = new ArrayList<>();

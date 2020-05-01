@@ -1,6 +1,11 @@
 import java.util.ArrayList;
 
 public class Superhero extends Category {
+    
+    public Superhero() {
+        super();
+        this.setWords();
+    }
 
     @Override
     protected void setWords() {

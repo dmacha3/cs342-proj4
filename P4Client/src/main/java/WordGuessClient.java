@@ -19,11 +19,7 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-
-
-
 public class WordGuessClient extends Application {
-
 
 	HashMap<String, Scene> sceneMap;
 	ListView<String> listItems;
@@ -31,7 +27,7 @@ public class WordGuessClient extends Application {
 	boolean connected;
 	Socket socket;
 	Button startBtn, startClientBtn;
-	Button catOneBtn,  catTwoBtn, catThreeBtn;
+	Button catOneBtn, catTwoBtn, catThreeBtn;
 	Button sendGuessBtn;
 	TextField portNumTF, ipTF, guessTF;
 	Alert emptyPortError, emptyIPError, wrongPortOrIPError, duplicateLetterError;
@@ -42,38 +38,38 @@ public class WordGuessClient extends Application {
 	VBox letters; // letters remaining
 	HBox word; // word on screen
 
-
 	int totalRoundsWon = 0;
 
 	ArrayList<Character> lettersGuessed; // stores the letters guessed per turn
 	Text guessesLeft, guessesLeftNum;
 
+	WordGuessInfo data;
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		launch(args);
 	}
 
-	//feel free to remove the starter code from this method
+	// feel free to remove the starter code from this method
 	@Override
 	public void start(Stage primaryStage) throws Exception {
-		//Variables
+		// Variables
 		sceneMap = new HashMap<String, Scene>();
 		listItems = new ListView<>();
-		//Port Alert
+		// Port Alert
 		emptyPortError = new Alert(Alert.AlertType.INFORMATION);
 		emptyPortError.setTitle("Incorrect Port Info");
 		emptyPortError.setHeaderText(null);
 		emptyPortError.setContentText("You have not entered a port.");
 
-		//IP Alert
+		// IP Alert
 		emptyIPError = new Alert(Alert.AlertType.INFORMATION);
 		emptyIPError.setTitle("Incorrect IP Address Info");
 		emptyIPError.setHeaderText(null);
 		emptyIPError.setContentText("You have not entered an IP Address.");
 
-		//IP and Port Alert
-		wrongPortOrIPError  = new Alert(Alert.AlertType.INFORMATION);
+		// IP and Port Alert
+		wrongPortOrIPError = new Alert(Alert.AlertType.INFORMATION);
 		wrongPortOrIPError.setTitle("Incorrect IP Address or Port Info");
 		wrongPortOrIPError.setHeaderText(null);
 		wrongPortOrIPError.setContentText("The IP Address or Port you have entered cannot be connected to.");
@@ -84,12 +80,10 @@ public class WordGuessClient extends Application {
 		duplicateLetterError.setHeaderText(null);
 		duplicateLetterError.setContentText("You have already chosen this letter");
 
-
 		sceneMap.put("Start", createStartScene());
 		sceneMap.put("Port", createPortAndIPScene());
 		sceneMap.put("Categories", createCategoryScene());
 		sceneMap.put("Game", createGameScene());
-
 
 		guessTF.textProperty().addListener((observable, oldValue, newValue) -> {
 			if (!newValue.equals("") && !newValue.matches("\\sa-zA-Z*")) {
@@ -107,37 +101,36 @@ public class WordGuessClient extends Application {
 		});
 
 		sendGuessBtn.setOnAction(e -> {
-			if(updateServer()) {
-				//sendGuessBtn.setDisable(true); //disable sending more info until server responds
+			if (updateServer()) {
+				// sendGuessBtn.setDisable(true); //disable sending more info until server
+				// responds
 				updateWithNewInformation(); // to be called later if we read from server
 			}
 		});
-
 
 		startBtn.setOnAction(e -> {
 			primaryStage.setScene(sceneMap.get("Port"));
 		});
 
 		startClientBtn.setOnAction(e -> {
-			if(portNumTF.getText().isEmpty()){
+			if (portNumTF.getText().isEmpty()) {
 				emptyPortError.showAndWait();
 			}
-			if(ipTF.getText().isEmpty()){
+			if (ipTF.getText().isEmpty()) {
 				emptyIPError.showAndWait();
-			}
-			else{
-				try{
+			} else {
+				try {
 					socket = new Socket(ipTF.getText(), Integer.parseInt(portNumTF.getText()));
 					connected = true;
-				}
-				catch (Exception a){
+				} catch (Exception a) {
 					connected = false;
 					wrongPortOrIPError.showAndWait();
 					portNumTF.setText("");
 					ipTF.setText("");
 				}
-				if(connected == true){
-					clientConnection = new Client(data -> Platform.runLater(()-> listItems.getItems().add(data.toString())),socket);
+				if (connected == true) {
+					clientConnection = new Client(
+							data -> Platform.runLater(() -> this.processData((WordGuessInfo) data)), socket);
 					clientConnection.start();
 					primaryStage.setScene(sceneMap.get("Categories"));
 				}
@@ -145,14 +138,17 @@ public class WordGuessClient extends Application {
 		});
 
 		catOneBtn.setOnAction(e -> {
+			this.choseCategory("animal");
 			primaryStage.setScene(sceneMap.get("Game"));
 		});
 
 		catTwoBtn.setOnAction(e -> {
+			this.choseCategory("country");
 			primaryStage.setScene(sceneMap.get("Game"));
 		});
 
-		catThreeBtn.setOnAction(e ->{
+		catThreeBtn.setOnAction(e -> {
+			this.choseCategory("superhero");
 			primaryStage.setScene(sceneMap.get("Game"));
 		});
 
@@ -162,7 +158,6 @@ public class WordGuessClient extends Application {
 			}
 		});
 
-
 		primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
 			@Override
 			public void handle(WindowEvent t) {
@@ -170,7 +165,6 @@ public class WordGuessClient extends Application {
 				System.exit(0);
 			}
 		});
-
 
 		// TODO Auto-generated method stub
 		primaryStage.setTitle("(Client) Playing word guess!!!");
@@ -180,13 +174,10 @@ public class WordGuessClient extends Application {
 		primaryStage.show();
 	}
 
-
-
 	public Scene createStartScene() {
 		BorderPane pane = new BorderPane();
-		pane.setPadding(new Insets(400,0,0,0));
-		String style = "-fx-background-image: url('Images/bgWordsInMiddle.jpg'); "  +
-				"-fx-background-size: 100% 100%;";
+		pane.setPadding(new Insets(400, 0, 0, 0));
+		String style = "-fx-background-image: url('Images/bgWordsInMiddle.jpg'); " + "-fx-background-size: 100% 100%;";
 		pane.setStyle(style);
 		startBtn = new Button("Start");
 		startBtn.setFont(Font.font("Arial", 30));
@@ -196,11 +187,10 @@ public class WordGuessClient extends Application {
 		return new Scene(pane, 800, 600);
 	}
 
-	public Scene createPortAndIPScene(){
+	public Scene createPortAndIPScene() {
 		BorderPane pane = new BorderPane();
 		pane.setPadding(new Insets(70));
-		String style = "-fx-background-image: url('Images/bgWordsAtTop.jpg'); "  +
-				"-fx-background-size: 100% 100%;";
+		String style = "-fx-background-image: url('Images/bgWordsAtTop.jpg'); " + "-fx-background-size: 100% 100%;";
 		pane.setStyle(style);
 		portNumTF = new TextField();
 		ipTF = new TextField();
@@ -218,17 +208,16 @@ public class WordGuessClient extends Application {
 		HBox ipInfo = new HBox(5, ipText, ipTF);
 		ipInfo.setAlignment(Pos.CENTER);
 		portInfo.setAlignment(Pos.CENTER);
-		VBox center = new VBox(10, enterIPText, ipInfo, enterPortText ,portInfo, startClientBtn);
+		VBox center = new VBox(10, enterIPText, ipInfo, enterPortText, portInfo, startClientBtn);
 		center.setAlignment(Pos.CENTER);
 		pane.setCenter(center);
 		return new Scene(pane, 800, 600);
 	}
 
-	public Scene createCategoryScene(){
+	public Scene createCategoryScene() {
 		BorderPane pane = new BorderPane();
 		pane.setPadding(new Insets(70));
-		String style = "-fx-background-image: url('Images/bgWordsAtTop.jpg'); "  +
-				"-fx-background-size: 100% 100%;";
+		String style = "-fx-background-image: url('Images/bgWordsAtTop.jpg'); " + "-fx-background-size: 100% 100%;";
 		pane.setStyle(style);
 		Text pickCatText = new Text("Please pick a category");
 		pickCatText.setFont(Font.font("Arial", 30));
@@ -246,14 +235,13 @@ public class WordGuessClient extends Application {
 		return new Scene(pane, 800, 600);
 	}
 
-	public Scene createGameScene2(){
+	public Scene createGameScene2() {
 		BorderPane pane = new BorderPane();
 		pane.setPadding(new Insets(70));
-		String style = "-fx-background-image: url('Images/bgNoWords.jpg'); "  +
-				"-fx-background-size: 100% 100%;";
+		String style = "-fx-background-image: url('Images/bgNoWords.jpg'); " + "-fx-background-size: 100% 100%;";
 		pane.setStyle(style);
 
-		//Text and Buttons
+		// Text and Buttons
 		Text makeGuessText = new Text("Please make a guess");
 		Text lettersGuessedInfoText = new Text("Letters Guessed Correct");
 		Text allLettersGuessedInfoText = new Text("All Letters Guessed");
@@ -266,7 +254,7 @@ public class WordGuessClient extends Application {
 		sendGuessBtn = new Button("Make Guess");
 		guessTF = new TextField();
 
-		//Setting fonts
+		// Setting fonts
 		makeGuessText.setFont(Font.font("Arial", 30));
 		lettersGuessedInfoText.setFont(Font.font("Arial", 30));
 		allLettersGuessedInfoText.setFont(Font.font("Arial", 30));
@@ -276,42 +264,46 @@ public class WordGuessClient extends Application {
 		catChose.setFont(Font.font("Arial", 30));
 		sendGuessBtn.setFont(Font.font("Arial", 30));
 
-		//Arraylist for letters guessed and all letters
+		// Arraylist for letters guessed and all letters
 		ArrayList<Text> lettersGuessedCorrectTextArr = new ArrayList<>();
 		ArrayList<Text> guessAllTextArr = new ArrayList<>();
 
-
-		//Hard code for letters guessed correctly
-		for(int i = 0; i < 6; i++){
+		// Hard code for letters guessed correctly
+		for (int i = 0; i < 6; i++) {
 			lettersGuessedCorrectTextArr.add(new Text("-"));
 		}
 
-		for(int i = 0; i < lettersGuessedCorrectTextArr.size(); i++){
+		for (int i = 0; i < lettersGuessedCorrectTextArr.size(); i++) {
 			lettersGuessedCorrectTextArr.get(i).setFont(Font.font("Arial", 30));
 		}
 
 		HBox guessCorrect = new HBox(5);
-		for(int i = 0; i <  lettersGuessedCorrectTextArr.size(); i++){
+		for (int i = 0; i < lettersGuessedCorrectTextArr.size(); i++) {
 			guessCorrect.getChildren().add(lettersGuessedCorrectTextArr.get(i));
 		}
 		guessCorrect.setAlignment(Pos.CENTER);
 
-		//Hard code for all letters
-		for(int i = 0; i < 26; i++){
-			guessAllTextArr.add(new Text(Character.toString((char)(i+65))));
+		// Hard code for all letters
+		for (int i = 0; i < 26; i++) {
+			guessAllTextArr.add(new Text(Character.toString((char) (i + 65))));
 		}
-		for(int i =0; i < guessAllTextArr.size(); i++){
+		for (int i = 0; i < guessAllTextArr.size(); i++) {
 			guessAllTextArr.get(i).setFont(Font.font("Arial", 24));
 		}
-		//All letters in hboxes
-		HBox firstLine = new HBox(5, guessAllTextArr.get(0),guessAllTextArr.get(1),guessAllTextArr.get(2),guessAllTextArr.get(3),guessAllTextArr.get(4));
-		HBox secondLine = new HBox(5, guessAllTextArr.get(5),guessAllTextArr.get(6),guessAllTextArr.get(7),guessAllTextArr.get(8),guessAllTextArr.get(9));
-		HBox thirdLine = new HBox(5, guessAllTextArr.get(10),guessAllTextArr.get(11),guessAllTextArr.get(12),guessAllTextArr.get(13),guessAllTextArr.get(14));
-		HBox fourthLine = new HBox(5, guessAllTextArr.get(15),guessAllTextArr.get(16),guessAllTextArr.get(17),guessAllTextArr.get(18),guessAllTextArr.get(19));
-		HBox fifthLine = new HBox(5, guessAllTextArr.get(20),guessAllTextArr.get(21),guessAllTextArr.get(22),guessAllTextArr.get(23),guessAllTextArr.get(24));
+		// All letters in hboxes
+		HBox firstLine = new HBox(5, guessAllTextArr.get(0), guessAllTextArr.get(1), guessAllTextArr.get(2),
+				guessAllTextArr.get(3), guessAllTextArr.get(4));
+		HBox secondLine = new HBox(5, guessAllTextArr.get(5), guessAllTextArr.get(6), guessAllTextArr.get(7),
+				guessAllTextArr.get(8), guessAllTextArr.get(9));
+		HBox thirdLine = new HBox(5, guessAllTextArr.get(10), guessAllTextArr.get(11), guessAllTextArr.get(12),
+				guessAllTextArr.get(13), guessAllTextArr.get(14));
+		HBox fourthLine = new HBox(5, guessAllTextArr.get(15), guessAllTextArr.get(16), guessAllTextArr.get(17),
+				guessAllTextArr.get(18), guessAllTextArr.get(19));
+		HBox fifthLine = new HBox(5, guessAllTextArr.get(20), guessAllTextArr.get(21), guessAllTextArr.get(22),
+				guessAllTextArr.get(23), guessAllTextArr.get(24));
 		HBox sixthLine = new HBox(5, guessAllTextArr.get(25));
 
-		//Vboxes for the top info
+		// Vboxes for the top info
 		VBox leftTop = new VBox(5, categoryCurrText, catChose);
 		leftTop.setAlignment(Pos.CENTER);
 		VBox rightTop = new VBox(10, guessesLeft, guessLeftNum);
@@ -321,14 +313,13 @@ public class WordGuessClient extends Application {
 		HBox top = new HBox(30, leftTop, middleTop, rightTop);
 		top.setAlignment(Pos.CENTER);
 
-		//Vboxes for all letters
-		VBox left = new VBox(5,allLettersGuessedInfoText, firstLine,secondLine,thirdLine,fourthLine,fifthLine,sixthLine);
+		// Vboxes for all letters
+		VBox left = new VBox(5, allLettersGuessedInfoText, firstLine, secondLine, thirdLine, fourthLine, fifthLine,
+				sixthLine);
 		left.setAlignment(Pos.CENTER);
-		//Vbox for center
+		// Vbox for center
 		VBox center = new VBox(5, makeGuessText, guessTF, sendGuessBtn);
 		center.setAlignment(Pos.CENTER);
-
-
 
 		pane.setLeft(left);
 		pane.setTop(top);
@@ -337,12 +328,10 @@ public class WordGuessClient extends Application {
 		return new Scene(pane, 800, 600);
 	}
 
-
 	// creates letter objects for game
 	public VBox createLetterObjects() {
 		VBox main = null;
 		HBox row1, row2;
-
 
 		row1 = new HBox();
 		row2 = new HBox();
@@ -350,12 +339,9 @@ public class WordGuessClient extends Application {
 			Button b = new Button(getLetter(i));
 			b.setMaxSize(48, 48);
 			b.setMinSize(48, 48);
-			b.setStyle(
-					"    -fx-font-family: \"Helvetica\";\n" +
-							"    -fx-font-size: 20px;\n" +
-							"    -fx-font-weight: bold;\n" +
-							"    -fx-text-fill: #FFFFFF;\n" +
-							" -fx-background-color:#" + letterColors.get(i));
+			b.setStyle("    -fx-font-family: \"Helvetica\";\n" + "    -fx-font-size: 20px;\n"
+					+ "    -fx-font-weight: bold;\n" + "    -fx-text-fill: #FFFFFF;\n" + " -fx-background-color:#"
+					+ letterColors.get(i));
 			lettersList.add(b);
 			row1.getChildren().add(lettersList.get(i));
 		}
@@ -364,12 +350,9 @@ public class WordGuessClient extends Application {
 			Button b = new Button(getLetter(i));
 			b.setMaxSize(48, 48);
 			b.setMinSize(48, 48);
-			b.setStyle(
-					"    -fx-font-family: \"Helvetica\";\n" +
-							"    -fx-font-size: 20px;\n" +
-							"    -fx-font-weight: bold;\n" +
-							"    -fx-text-fill: #FFFFFF;\n" +
-							" -fx-background-color:#" + letterColors.get(i));
+			b.setStyle("    -fx-font-family: \"Helvetica\";\n" + "    -fx-font-size: 20px;\n"
+					+ "    -fx-font-weight: bold;\n" + "    -fx-text-fill: #FFFFFF;\n" + " -fx-background-color:#"
+					+ letterColors.get(i));
 			lettersList.add(b);
 			row2.getChildren().add(lettersList.get(i));
 		}
@@ -382,24 +365,20 @@ public class WordGuessClient extends Application {
 		return main;
 	}
 
-
 	public String getLetter(int i) {
-		int ascii = 97 + i; //'a' + 0...26
+		int ascii = 97 + i; // 'a' + 0...26
 		return (Character.toString((char) ascii));
 	}
 
 	public Scene createGameScene() {
-		//BorderPane pane = new BorderPane();
+		// BorderPane pane = new BorderPane();
 		Pane p = new Pane();
-		String style = "-fx-background-image: url('Images/bgSuperF.png'); "  +
-				"-fx-background-size: 100% 100%;";
-		//pane.setStyle(style);
+		String style = "-fx-background-image: url('Images/bgSuperF.png'); " + "-fx-background-size: 100% 100%;";
+		// pane.setStyle(style);
 		p.setStyle(style);
-
 
 		lettersGuessed = new ArrayList<>(); // new letters to guess
 		lettersList = new ArrayList<>();
-
 
 		/// to interact with the server ///
 
@@ -409,12 +388,11 @@ public class WordGuessClient extends Application {
 		guessTF = new TextField();
 		VBox guessBox = new VBox(10, guessTF, sendGuessBtn);
 		guessBox.setStyle("-fx-background-color: rgb(32, 17, 16)");
-		//guessBox.setAlignment(Pos.CENTER);
+		// guessBox.setAlignment(Pos.CENTER);
 		guessBox.setMaxHeight(262);
 		guessBox.setMinHeight(262);
 		guessBox.setMaxWidth(447);
 		guessBox.setMinWidth(447);
-
 
 		letterColors = new ArrayList<>();
 
@@ -422,26 +400,19 @@ public class WordGuessClient extends Application {
 			letterColors.add("1a211c");
 		}
 
-
 		/// to display num of guesses left ///
 		guessesLeft = new Text("Guesses Left: ");
 		guessesLeftNum = new Text("6");
 
-		guessesLeft.setStyle(
-				"    -fx-font-family: \"Helvetica\";\n" +
-						"    -fx-font-size: 30px;\n" +
-						"    -fx-text-fill: #FFFFFF;\n" +
+		guessesLeft.setStyle("    -fx-font-family: \"Helvetica\";\n" + "    -fx-font-size: 30px;\n"
+				+ "    -fx-text-fill: #FFFFFF;\n" +
 
-						"    -fx-font-weight: bold;\n");
+				"    -fx-font-weight: bold;\n");
 
-		guessesLeftNum.setStyle(
-				"    -fx-font-family: \"Helvetica\";\n" +
-						"    -fx-font-size: 30px;\n" +
-						"    -fx-text-fill: #F000FF;\n" +
-						"    -fx-font-weight: bold;\n");
+		guessesLeftNum.setStyle("    -fx-font-family: \"Helvetica\";\n" + "    -fx-font-size: 30px;\n"
+				+ "    -fx-text-fill: #F000FF;\n" + "    -fx-font-weight: bold;\n");
 
 		letters = createLetterObjects();
-
 
 		HBox numLeft = new HBox(5, guessesLeft, guessesLeftNum);
 		numLeft.setAlignment(Pos.CENTER);
@@ -453,7 +424,6 @@ public class WordGuessClient extends Application {
 		p.getChildren().add(guessBox);
 		p.getChildren().add(numLeft);
 		p.getChildren().add(letters);
-
 
 		int wordLength = 3; // UPDATE WITH INFO FROM SERVER
 
@@ -467,8 +437,6 @@ public class WordGuessClient extends Application {
 		word.setLayoutX(wordX);
 		word.setLayoutY(wordY);
 
-
-
 		guessBox.setLayoutX(62);
 		guessBox.setLayoutY(400);
 		guessBox.setAlignment(Pos.CENTER);
@@ -479,23 +447,13 @@ public class WordGuessClient extends Application {
 		String gS = "-fx-background-color: rgb(12, 4, 4); -fx-font-size: 72px; -fx-text-fill: #FFFFFF;";
 		guessTF.setStyle(gS);
 		sendGuessBtn.setStyle(
-				"    -fx-font-family: \"Helvetica\";\n" +
-						"    -fx-font-size: 20px;\n" +
-						"    -fx-font-weight: bold;\n" +
-						"    -fx-text-fill: #FFFFFF;\n" +
-						" -fx-background-color: rgb(23, 74, 55);");
-
-
-
+				"    -fx-font-family: \"Helvetica\";\n" + "    -fx-font-size: 20px;\n" + "    -fx-font-weight: bold;\n"
+						+ "    -fx-text-fill: #FFFFFF;\n" + " -fx-background-color: rgb(23, 74, 55);");
 
 		numLeft.setLayoutY(413);
 		numLeft.setLayoutX(568);
-		numLeft.setStyle(
-				"    -fx-font-family: \"Helvetica\";\n" +
-						"    -fx-font-size: 30px;\n" +
-						"    -fx-font-weight: bold;\n" +
-						" -fx-background-color: rgb(23, 74, 55);");
-
+		numLeft.setStyle("    -fx-font-family: \"Helvetica\";\n" + "    -fx-font-size: 30px;\n"
+				+ "    -fx-font-weight: bold;\n" + " -fx-background-color: rgb(23, 74, 55);");
 
 		letters.setLayoutY(534);
 		letters.setLayoutX(579);
@@ -518,7 +476,8 @@ public class WordGuessClient extends Application {
 	}
 
 	// helper function
-	// is called each time the make guess button is pressed and makes appropricate deicision based on
+	// is called each time the make guess button is pressed and makes appropricate
+	// deicision based on
 	// text in text field
 	public boolean updateServer() {
 
@@ -537,18 +496,15 @@ public class WordGuessClient extends Application {
 			return false;
 		}
 
-		if (lettersGuessed.contains(val.charAt(0))) {
-			System.out.println("letter already picked");
-			duplicateLetterError.showAndWait();
-			return false;
-		}
-
 		lettersGuessed.add(val.charAt(0));
-		// if not (valid) char return false
+
+		// Send request to server
+		this.data.guessedLetter = val.charAt(0);
+		this.data.processCode = 2;
+		this.clientConnection.send(data);
 
 		return true;
 	}
-
 
 	// helper function that is called when server returns results
 	public void updateWithNewInformation() {
@@ -564,23 +520,22 @@ public class WordGuessClient extends Application {
 		boolean guessedCorrectly = false; // to be retrieved from object: did the user guess correctly
 		System.out.println("Number of guesses left" + numGuesses);
 
-
 		if (!guessedCorrectly) {
 			System.out.println("You did not guess correctly");
 
 		} else {
 			// guess correct, update letters
-			//displayLetter(lettersGuessed.size() - 1, lettersGuessed.get(lettersGuessed.size() - 1));
+			// displayLetter(lettersGuessed.size() - 1,
+			// lettersGuessed.get(lettersGuessed.size() - 1));
 		}
 
 		displayLetter(lettersGuessed.size() - 1, lettersGuessed.get(lettersGuessed.size() - 1));
 
-
 		System.out.println("");
 	}
 
-
-	// at the start of each round this creates a new object that is displayed on screen
+	// at the start of each round this creates a new object that is displayed on
+	// screen
 	public HBox createNewWord(int length) {
 
 		word = new HBox();
@@ -591,7 +546,7 @@ public class WordGuessClient extends Application {
 		if (h > 128) {
 			h = 128; // update height if it gets too tall
 		}
-		int w = 1240/ length;
+		int w = 1240 / length;
 
 		if (w > 128) {
 			w = 128; // update width if it gets too big
@@ -601,12 +556,9 @@ public class WordGuessClient extends Application {
 			Button b = new Button("-");
 			b.setMaxSize(w, h);
 			b.setMinSize(w, h);
-			b.setStyle(
-					"    -fx-font-family: \"Helvetica\";\n" +
-							"    -fx-font-size: 40px;\n" +
-							"    -fx-font-weight: bold;\n" +
-							"    -fx-text-fill: #FFFFFF;\n" +
-							" -fx-background-color:rgb(32, 17, 16)");
+			b.setStyle("    -fx-font-family: \"Helvetica\";\n" + "    -fx-font-size: 40px;\n"
+					+ "    -fx-font-weight: bold;\n" + "    -fx-text-fill: #FFFFFF;\n"
+					+ " -fx-background-color:rgb(32, 17, 16)");
 
 			currentWord.add(b);
 			word.getChildren().add(currentWord.get(i));
@@ -629,14 +581,13 @@ public class WordGuessClient extends Application {
 		lettersList.get(index).setStyle("-fx-background-color: #0c0404; -fx-text-fill: #0c0404");
 	}
 
-
-	// to adjust dynamically to the size of the word, we must reposition our 'word' vector on the screen
+	// to adjust dynamically to the size of the word, we must reposition our 'word'
+	// vector on the screen
 	// this helper returns the right x coordinate for a word of the given length
 	public int getXCoord(int length) {
-		int w = 1240/ length;
+		int w = 1240 / length;
 
 		int x;
-
 
 		if (w > 128) {
 			w = 128; // update width if it gets too big
@@ -647,14 +598,61 @@ public class WordGuessClient extends Application {
 		return x;
 	}
 
-
-
-	// when we receive word from the server that the user guessed correctly, we get an
+	// when we receive word from the server that the user guessed correctly, we get
+	// an
 	// index to update and the letter to update with (we never send the whole word)
 	// ... this function updates that letter for us
 	public void displayLetter(int pos, char c) {
 
 		String s = Character.toString(c);
 		currentWord.get(pos).setText(s);
+	}
+
+	public void processData(WordGuessInfo data) {
+
+		this.data = data;
+
+		switch (this.data.processCode) {
+
+			// Simple message that connection was succesfull
+			case 1:
+				break;
+			// Returns currentword length
+			case 2:
+			//	this.word = this.createNewWord(data.currentWordLength);
+				break;
+			// Letter was guessed correctly
+			// indexes to update are in data.indexesToUpdate (starts at 0)
+			// letter is in data.guessedLetter
+			case 3:
+				break;
+			// Letter was not guessed correctly
+			// Number of invalid guesses is in data.numberOfInvalidGuesses
+			case 4:
+				break;
+			// Whole game was won
+			case 5:
+				break;
+			// User guessed the word
+			case 6:
+				break;
+			// User did not guess the word after 6 invalid guesses
+			case 7:
+				break;
+			// Game is over, user did not guess word in one of three categories 3 times
+			case 8:
+				break;
+			default:
+				break;
+		}
+
+	}
+
+	public void choseCategory(String category) {
+
+		this.data.currentCategory = category;
+		this.data.processCode = 1;
+
+		this.clientConnection.send(this.data);
 	}
 }

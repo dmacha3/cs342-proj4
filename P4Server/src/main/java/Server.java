@@ -13,7 +13,7 @@ import javafx.scene.control.ListView;
 public class Server {
 
     ServerSocket mysocket;
-    int count = 1;
+    int count = 0;
     ArrayList<ClientThread> players = new ArrayList<ClientThread>();
     TheServer server;
     private Consumer<Serializable> callback;
@@ -117,9 +117,10 @@ public class Server {
 
                 } catch (Exception e) {
 
-                    callback.accept("Player with ID " + count + " has disconnected from server.");
+                    callback.accept("Player with ID " + playerId + " has disconnected from server.");
 
                     players.remove(this);
+                    count--;
                     break;
                 }
             }
@@ -132,15 +133,25 @@ public class Server {
                 // get random word from category
                 case 1:
                     if (this.wordGuessInfo.currentCategory.equals("country")) {
-                        this.animalCategory.setCurrentWord();
+                        this.countryCategory.setCurrentWord();
                         this.currentCategory = this.countryCategory;
+
+                        callback.accept("Player with ID " + playerId + " has chosen Country category.");
                     } else if (this.wordGuessInfo.currentCategory.equals("animal")) {
                         this.animalCategory.setCurrentWord();
                         this.currentCategory = this.animalCategory;
+
+                        callback.accept("Player with ID " + playerId + " has chosen Animal category.");
+
                     } else if (this.wordGuessInfo.currentCategory.equals("superhero")) {
                         this.superheroCategory.setCurrentWord();
                         this.currentCategory = this.superheroCategory;
+
+                        callback.accept("Player with ID " + playerId + " has chosen Superhero category.");
                     }
+
+                    callback.accept("Player with ID " + playerId + " word to guess is "
+                            + this.currentCategory.getCurrentWord());
 
                     this.wordGuessInfo.indexesToUpdate = new ArrayList<Integer>();
                     this.wordGuessInfo.currentWordLength = this.currentCategory.getCurrentWordLenght();
@@ -154,20 +165,32 @@ public class Server {
 
                 // Case 2 is for checking guessed letter in the word.
                 case 2:
+                    // Clear before each guess
+                    this.wordGuessInfo.indexesToUpdate.clear();
+
                     if (this.currentCategory.checkLetter(this.wordGuessInfo.guessedLetter)) {
                         this.wordGuessInfo.wasLetterGuessed = true;
-                        this.wordGuessInfo.processCode = 3;
                         this.currentCategory.copyIndexesToUpdateForCurrentGuess(this.wordGuessInfo.indexesToUpdate);
+
+                        callback.accept("Player with ID " + playerId + " has guessed \""
+                                + this.wordGuessInfo.guessedLetter + "\"");
+
+                        this.wordGuessInfo.processCode = 3;
 
                         this.checkIfCategoryGuessed();
                         this.checkIfGameWon();
                     } else {
                         this.wordGuessInfo.wasLetterGuessed = false;
                         this.wordGuessInfo.numberOfInvalidGuesses = this.currentCategory.getNumberOfInvalidGuesses();
-                        this.checkIfCategoryFailed();
-                        this.checkIfGameOver();
+
+                        callback.accept("Player with ID " + playerId + " did not guess correct letter;");
+                        callback.accept("Player with ID " + playerId + " has guessed: "
+                                + this.wordGuessInfo.numberOfInvalidGuesses + " times.");
 
                         this.wordGuessInfo.processCode = 4;
+
+                        this.checkIfCategoryFailed();
+                        this.checkIfGameOver();
                     }
 
                     this.updatePlayer();
@@ -183,6 +206,8 @@ public class Server {
                     && this.countryCategory.isCategoryGuessed() == true) {
                 this.wordGuessInfo.gameWon = true;
 
+                callback.accept("Player with ID " + playerId + " has won the game!");
+
                 // Set processCode to 5 indicating that game was won
                 this.wordGuessInfo.processCode = 5;
             }
@@ -197,6 +222,8 @@ public class Server {
                 this.currentCategory.resetForNextGame();
                 this.currentCategory = null;
 
+                callback.accept("Player with ID " + playerId + " has guessed category!");
+
                 // Set processCode to 6 indicating that category was guessed.
                 this.wordGuessInfo.processCode = 6;
             }
@@ -208,6 +235,8 @@ public class Server {
                 this.wordGuessInfo.processCode = 7;
                 this.currentCategory.resetForNextGame();
                 this.currentCategory = null;
+
+                callback.accept("Player with ID " + playerId + " did not guess word in the current category.");
             }
         }
 
@@ -215,6 +244,8 @@ public class Server {
 
             if (superheroCategory.categoryFailed() == true || this.countryCategory.categoryFailed() == true
                     || this.animalCategory.categoryFailed() == true) {
+
+                callback.accept("Player with ID " + playerId + " - GAME OVER.");
 
                 // Set processCode to 8 indicating that game is over
                 this.wordGuessInfo.processCode = 8;
