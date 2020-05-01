@@ -634,6 +634,10 @@ public class WordGuessClient extends Application {
 			case 5:
 				break;
 			// User guessed the word
+			// data.superheroCategoryPassed
+			// data.animalCategoryPassed
+			// data.countryCategoryPassed
+			// these are bool that indicate which category is currently passed
 			case 6:
 				break;
 			// User did not guess the word after 6 invalid guesses
