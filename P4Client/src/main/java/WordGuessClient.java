@@ -38,8 +38,6 @@ public class WordGuessClient extends Application {
 	VBox letters; // letters remaining
 	HBox word; // word on screen
 
-<<<<<<< Updated upstream
-=======
 
 
 	Text msg;
@@ -51,7 +49,6 @@ public class WordGuessClient extends Application {
 
 	String passed = ""; // keeps track of which cateogires have been passed
 
->>>>>>> Stashed changes
 	int totalRoundsWon = 0;
 
 	boolean roundOver = false;
@@ -60,11 +57,7 @@ public class WordGuessClient extends Application {
 	Text guessesLeft, guessesLeftNum;
 	Text totalGuessed, totalGuessedNum;
 
-<<<<<<< Updated upstream
-	WordGuessInfo data;
-=======
 	WordGuessInfo gameInfo;
->>>>>>> Stashed changes
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
@@ -125,12 +118,8 @@ public class WordGuessClient extends Application {
 			if (updateServer()) {
 				// sendGuessBtn.setDisable(true); //disable sending more info until server
 				// responds
-<<<<<<< Updated upstream
-				updateWithNewInformation(); // to be called later if we read from server
-=======
 
 				//updateWithNewInformation(); // to be called later if we read from server
->>>>>>> Stashed changes
 			}
 		});
 
@@ -156,9 +145,6 @@ public class WordGuessClient extends Application {
 				}
 				if (connected == true) {
 					clientConnection = new Client(
-<<<<<<< Updated upstream
-							data -> Platform.runLater(() -> this.processData((WordGuessInfo) data)), socket);
-=======
 							data -> Platform.runLater(() ->
 									{
 										int previousTotal = totalRoundsWon;
@@ -171,7 +157,6 @@ public class WordGuessClient extends Application {
 									}
 
 							), socket);
->>>>>>> Stashed changes
 					clientConnection.start();
 					primaryStage.setScene(sceneMap.get("Categories"));
 				}
@@ -180,29 +165,19 @@ public class WordGuessClient extends Application {
 
 		catOneBtn.setOnAction(e -> {
 			this.choseCategory("animal");
-<<<<<<< Updated upstream
-=======
 			System.out.println("Chose animal category");
->>>>>>> Stashed changes
 			primaryStage.setScene(sceneMap.get("Game"));
 		});
 
 		catTwoBtn.setOnAction(e -> {
-<<<<<<< Updated upstream
-			this.choseCategory("country");
-=======
 			choseCategory("country");
 			System.out.println("Chose country category");
->>>>>>> Stashed changes
 			primaryStage.setScene(sceneMap.get("Game"));
 		});
 
 		catThreeBtn.setOnAction(e -> {
 			this.choseCategory("superhero");
-<<<<<<< Updated upstream
-=======
 			System.out.println("Chose superhero category");
->>>>>>> Stashed changes
 			primaryStage.setScene(sceneMap.get("Game"));
 		});
 
@@ -228,8 +203,6 @@ public class WordGuessClient extends Application {
 		primaryStage.show();
 	}
 
-<<<<<<< Updated upstream
-=======
 //	public Scene createStartScene() {
 //		BorderPane pane = new BorderPane();
 //		pane.setPadding(new Insets(400, 0, 0, 0));
@@ -291,11 +264,11 @@ public class WordGuessClient extends Application {
 //		return new Scene(pane, 800, 600);
 //	}
 
->>>>>>> Stashed changes
 	public Scene createStartScene() {
 		BorderPane pane = new BorderPane();
-		pane.setPadding(new Insets(400, 0, 0, 0));
-		String style = "-fx-background-image: url('Images/bgWordsInMiddle.jpg'); " + "-fx-background-size: 100% 100%;";
+		pane.setPadding(new Insets(400,0,0,0));
+		String style = "-fx-background-image: url('Images/bgWordsInMiddle.jpg'); "  +
+				"-fx-background-size: 100% 100%;";
 		pane.setStyle(style);
 		VBox dummy = new VBox();
 		startBtn = new Button("Start");
@@ -310,10 +283,11 @@ public class WordGuessClient extends Application {
 		return new Scene(pane, 1280, 720);
 	}
 
-	public Scene createPortAndIPScene() {
+	public Scene createPortAndIPScene(){
 		BorderPane pane = new BorderPane();
 		pane.setPadding(new Insets(70));
-		String style = "-fx-background-image: url('Images/bgWordsAtTop.jpg'); " + "-fx-background-size: 100% 100%;";
+		String style = "-fx-background-image: url('Images/bgWordsAtTop.jpg'); "  +
+				"-fx-background-size: 100% 100%;";
 		pane.setStyle(style);
 
 
@@ -341,11 +315,6 @@ public class WordGuessClient extends Application {
 				"    -fx-font-weight: bold;\n");
 		HBox portInfo = new HBox(5, portText, portNumTF);
 		HBox ipInfo = new HBox(5, ipText, ipTF);
-<<<<<<< Updated upstream
-		ipInfo.setAlignment(Pos.CENTER);
-		portInfo.setAlignment(Pos.CENTER);
-		VBox center = new VBox(10, enterIPText, ipInfo, enterPortText, portInfo, startClientBtn);
-=======
 
 		VBox txts = new VBox(5, ipText, portText);
 		VBox tfs = new VBox(5, ipTF, portNumTF);
@@ -354,16 +323,16 @@ public class WordGuessClient extends Application {
 		startDetails.setAlignment(Pos.CENTER);
 
 		VBox center = new VBox(10, startDetails, startClientBtn);
->>>>>>> Stashed changes
 		center.setAlignment(Pos.CENTER);
 		pane.setCenter(center);
 		return new Scene(pane, 1280, 720);
 	}
 
-	public Scene createCategoryScene() {
+	public Scene createCategoryScene(){
 		BorderPane pane = new BorderPane();
 		pane.setPadding(new Insets(70));
-		String style = "-fx-background-image: url('Images/bgWordsAtTop.jpg'); " + "-fx-background-size: 100% 100%;";
+		String style = "-fx-background-image: url('Images/bgWordsAtTop.jpg'); "  +
+				"-fx-background-size: 100% 100%;";
 		pane.setStyle(style);
 		Text pickCatText = new Text("Please pick a category");
 		pickCatText.setStyle("    -fx-font-family: \"Helvetica\";\n" +
@@ -401,96 +370,6 @@ public class WordGuessClient extends Application {
 		VBox categories = new VBox(20, catOneBtn, catTwoBtn, catThreeBtn);
 		categories.setAlignment(Pos.CENTER);
 
-<<<<<<< Updated upstream
-	public Scene createGameScene2() {
-		BorderPane pane = new BorderPane();
-		pane.setPadding(new Insets(70));
-		String style = "-fx-background-image: url('Images/bgNoWords.jpg'); " + "-fx-background-size: 100% 100%;";
-		pane.setStyle(style);
-
-		// Text and Buttons
-		Text makeGuessText = new Text("Please make a guess");
-		Text lettersGuessedInfoText = new Text("Letters Guessed Correct");
-		Text allLettersGuessedInfoText = new Text("All Letters Guessed");
-		Text guessesLeft = new Text("Guesses Left");
-		Text guessLeftNum = new Text("6");
-		Text categoryCurrText = new Text("Current Category");
-		Text catChose = new Text("Animals");
-
-		// send button -> sends text in textfield to the server
-		sendGuessBtn = new Button("Make Guess");
-		guessTF = new TextField();
-
-		// Setting fonts
-		makeGuessText.setFont(Font.font("Arial", 30));
-		lettersGuessedInfoText.setFont(Font.font("Arial", 30));
-		allLettersGuessedInfoText.setFont(Font.font("Arial", 30));
-		guessesLeft.setFont(Font.font("Arial", 30));
-		guessLeftNum.setFont(Font.font("Arial", 30));
-		categoryCurrText.setFont(Font.font("Arial", 30));
-		catChose.setFont(Font.font("Arial", 30));
-		sendGuessBtn.setFont(Font.font("Arial", 30));
-
-		// Arraylist for letters guessed and all letters
-		ArrayList<Text> lettersGuessedCorrectTextArr = new ArrayList<>();
-		ArrayList<Text> guessAllTextArr = new ArrayList<>();
-
-		// Hard code for letters guessed correctly
-		for (int i = 0; i < 6; i++) {
-			lettersGuessedCorrectTextArr.add(new Text("-"));
-		}
-
-		for (int i = 0; i < lettersGuessedCorrectTextArr.size(); i++) {
-			lettersGuessedCorrectTextArr.get(i).setFont(Font.font("Arial", 30));
-		}
-
-		HBox guessCorrect = new HBox(5);
-		for (int i = 0; i < lettersGuessedCorrectTextArr.size(); i++) {
-			guessCorrect.getChildren().add(lettersGuessedCorrectTextArr.get(i));
-		}
-		guessCorrect.setAlignment(Pos.CENTER);
-
-		// Hard code for all letters
-		for (int i = 0; i < 26; i++) {
-			guessAllTextArr.add(new Text(Character.toString((char) (i + 65))));
-		}
-		for (int i = 0; i < guessAllTextArr.size(); i++) {
-			guessAllTextArr.get(i).setFont(Font.font("Arial", 24));
-		}
-		// All letters in hboxes
-		HBox firstLine = new HBox(5, guessAllTextArr.get(0), guessAllTextArr.get(1), guessAllTextArr.get(2),
-				guessAllTextArr.get(3), guessAllTextArr.get(4));
-		HBox secondLine = new HBox(5, guessAllTextArr.get(5), guessAllTextArr.get(6), guessAllTextArr.get(7),
-				guessAllTextArr.get(8), guessAllTextArr.get(9));
-		HBox thirdLine = new HBox(5, guessAllTextArr.get(10), guessAllTextArr.get(11), guessAllTextArr.get(12),
-				guessAllTextArr.get(13), guessAllTextArr.get(14));
-		HBox fourthLine = new HBox(5, guessAllTextArr.get(15), guessAllTextArr.get(16), guessAllTextArr.get(17),
-				guessAllTextArr.get(18), guessAllTextArr.get(19));
-		HBox fifthLine = new HBox(5, guessAllTextArr.get(20), guessAllTextArr.get(21), guessAllTextArr.get(22),
-				guessAllTextArr.get(23), guessAllTextArr.get(24));
-		HBox sixthLine = new HBox(5, guessAllTextArr.get(25));
-
-		// Vboxes for the top info
-		VBox leftTop = new VBox(5, categoryCurrText, catChose);
-		leftTop.setAlignment(Pos.CENTER);
-		VBox rightTop = new VBox(10, guessesLeft, guessLeftNum);
-		rightTop.setAlignment(Pos.CENTER);
-		VBox middleTop = new VBox(10, lettersGuessedInfoText, guessCorrect);
-		middleTop.setAlignment(Pos.CENTER);
-		HBox top = new HBox(30, leftTop, middleTop, rightTop);
-		top.setAlignment(Pos.CENTER);
-
-		// Vboxes for all letters
-		VBox left = new VBox(5, allLettersGuessedInfoText, firstLine, secondLine, thirdLine, fourthLine, fifthLine,
-				sixthLine);
-		left.setAlignment(Pos.CENTER);
-		// Vbox for center
-		VBox center = new VBox(5, makeGuessText, guessTF, sendGuessBtn);
-		center.setAlignment(Pos.CENTER);
-
-		pane.setLeft(left);
-		pane.setTop(top);
-=======
 
 		VBox center = new VBox(10, pickCatText, categories);
 
@@ -503,7 +382,6 @@ public class WordGuessClient extends Application {
 				"    -fx-fill: white;\n" +
 				"    -fx-font-weight: bold;\n");
 		center.setAlignment(Pos.CENTER);
->>>>>>> Stashed changes
 		pane.setCenter(center);
 
 		pane.setBottom(v);
@@ -554,11 +432,7 @@ public class WordGuessClient extends Application {
 
 	public Scene createGameScene() {
 		// BorderPane pane = new BorderPane();
-<<<<<<< Updated upstream
-		Pane p = new Pane();
-=======
 		p = new Pane();
->>>>>>> Stashed changes
 		String style = "-fx-background-image: url('Images/bgSuperF.png'); " + "-fx-background-size: 100% 100%;";
 		// pane.setStyle(style);
 		p.setStyle(style);
@@ -591,20 +465,12 @@ public class WordGuessClient extends Application {
 		guessesLeftNum = new Text("6");
 
 		guessesLeft.setStyle("    -fx-font-family: \"Helvetica\";\n" + "    -fx-font-size: 30px;\n"
-<<<<<<< Updated upstream
-				+ "    -fx-text-fill: #FFFFFF;\n" +
-=======
 				+ "    -fx-fill: #FFFFFF;\n" +
->>>>>>> Stashed changes
 
 				"    -fx-font-weight: bold;\n");
 
 		guessesLeftNum.setStyle("    -fx-font-family: \"Helvetica\";\n" + "    -fx-font-size: 30px;\n"
-<<<<<<< Updated upstream
-				+ "    -fx-text-fill: #F000FF;\n" + "    -fx-font-weight: bold;\n");
-=======
 				+ "    -fx-fill: #FFFFFF;\n" + "    -fx-font-weight: bold;\n");
->>>>>>> Stashed changes
 
 		letters = createLetterObjects();
 
@@ -619,11 +485,7 @@ public class WordGuessClient extends Application {
 		p.getChildren().add(numLeft);
 		p.getChildren().add(letters);
 
-<<<<<<< Updated upstream
-		int wordLength = 3; // UPDATE WITH INFO FROM SERVER
-=======
 		int wordLength = 5; // temp
->>>>>>> Stashed changes
 
 		word = createNewWord(wordLength);
 		word.setAlignment(Pos.CENTER);
@@ -715,14 +577,6 @@ public class WordGuessClient extends Application {
 			return false;
 		}
 
-<<<<<<< Updated upstream
-		lettersGuessed.add(val.charAt(0));
-
-		// Send request to server
-		this.data.guessedLetter = val.charAt(0);
-		this.data.processCode = 2;
-		this.clientConnection.send(data);
-=======
 
 		if (lettersGuessed.contains(val.charAt(0))) {
 			duplicateLetterError.showAndWait();
@@ -738,7 +592,6 @@ public class WordGuessClient extends Application {
 		gameInfo.guessedLetter = val.charAt(0);
 		gameInfo.processCode = 2;
 		clientConnection.send(gameInfo);
->>>>>>> Stashed changes
 
 		return true;
 	}
@@ -749,36 +602,17 @@ public class WordGuessClient extends Application {
 		for (Character c : lettersGuessed) {
 			updateLetter(c); // update each letter to be not visible
 		}
-<<<<<<< Updated upstream
-		System.out.println("");
-		int numGuesses = 6; // to be retrieved from object
-		boolean guessedCorrectly = false; // to be retrieved from object: did the user guess correctly
-		System.out.println("Number of guesses left" + numGuesses);
-
-		if (!guessedCorrectly) {
-			System.out.println("You did not guess correctly");
-=======
 
 		guessesLeftNum.setText(String.valueOf(6 - gameInfo.numberOfInvalidGuesses));
->>>>>>> Stashed changes
 
 		if (correct) {
 			for (int i: gameInfo.indexesToUpdate) {
 				displayLetter(i, gameInfo.guessedLetter);
 			}
 		} else {
-<<<<<<< Updated upstream
-			// guess correct, update letters
-			// displayLetter(lettersGuessed.size() - 1,
-			// lettersGuessed.get(lettersGuessed.size() - 1));
-		}
-
-		displayLetter(lettersGuessed.size() - 1, lettersGuessed.get(lettersGuessed.size() - 1));
-=======
 			System.out.println("user has 1 less guess for a new total of " + guessesLeftNum.getText());
 		}
 
->>>>>>> Stashed changes
 
 		System.out.println("");
 	}
@@ -830,15 +664,12 @@ public class WordGuessClient extends Application {
 		lettersList.get(index).setStyle("-fx-background-color: #0c0404; -fx-text-fill: #0c0404");
 	}
 
-<<<<<<< Updated upstream
-=======
 	public void resetLetter(char c) {
 		int index = c - 97; // c - 'a' is the right index
 		lettersList.get(index).setStyle("    -fx-font-family: \"Helvetica\";\n" + "    -fx-font-size: 20px;\n"
 				+ "    -fx-font-weight: bold;\n" + "    -fx-text-fill: #FFFFFF;\n" + " -fx-background-color:#1a211c");
 	}
 
->>>>>>> Stashed changes
 	// to adjust dynamically to the size of the word, we must reposition our 'word'
 	// vector on the screen
 	// this helper returns the right x coordinate for a word of the given length
@@ -868,43 +699,6 @@ public class WordGuessClient extends Application {
 
 	public void processData(WordGuessInfo data) {
 
-<<<<<<< Updated upstream
-		this.data = data;
-
-		switch (this.data.processCode) {
-
-			// Simple message that connection was succesfull
-			case 1:
-				break;
-			// Returns currentword length
-			case 2:
-			//	this.word = this.createNewWord(data.currentWordLength);
-				break;
-			// Letter was guessed correctly
-			// indexes to update are in data.indexesToUpdate (starts at 0)
-			// letter is in data.guessedLetter
-			case 3:
-				break;
-			// Letter was not guessed correctly
-			// Number of invalid guesses is in data.numberOfInvalidGuesses
-			case 4:
-				break;
-			// Whole game was won
-			case 5:
-				break;
-			// User guessed the word
-			// data.superheroCategoryPassed
-			// data.animalCategoryPassed
-			// data.countryCategoryPassed
-			// these are bool that indicate which category is currently passed
-			case 6:
-				break;
-			// User did not guess the word after 6 invalid guesses
-			case 7:
-				break;
-			// Game is over, user did not guess word in one of three categories 3 times
-			case 8:
-=======
 		this.gameInfo = data;
 		switch (gameInfo.processCode) {
 
@@ -954,7 +748,6 @@ public class WordGuessClient extends Application {
 				System.out.println("LOST WHOLE GAME === ADD NEW SCREEN");
 				;
 
->>>>>>> Stashed changes
 				break;
 			default:
 				break;
@@ -964,12 +757,6 @@ public class WordGuessClient extends Application {
 
 	public void choseCategory(String category) {
 
-<<<<<<< Updated upstream
-		this.data.currentCategory = category;
-		this.data.processCode = 1;
-
-		this.clientConnection.send(this.data);
-=======
 		gameInfo.currentCategory = category;
 		gameInfo.processCode = 1;
 
@@ -1030,6 +817,5 @@ public class WordGuessClient extends Application {
 		totalGuessedNum.setText(String.valueOf(totalRoundsWon));
 
 
->>>>>>> Stashed changes
 	}
 }
