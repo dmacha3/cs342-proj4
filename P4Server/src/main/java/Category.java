@@ -95,14 +95,13 @@ public abstract class Category {
 
     public void resetForNextGame() {
         this.currentWord = null;
-        this.categoryGuessed = false;
         this.numberOfLettersGuessed = 0;
         this.numberOfInvalidGuesses = 0;
         this.indexesToUpdateForCurrentGuess.clear();
     }
 
     public boolean categoryFailed() {
-        if (this.wordsUsed.size() == 4) {
+        if (this.wordsUsed.size() == 3 && this.currentWord == null) {
             return true;
         }
 
