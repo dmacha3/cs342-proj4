@@ -101,9 +101,6 @@ public class Server {
             // Set porccessCode to 1 indicating that player has successfully conntected.
             this.wordGuessInfo.processCode = 1;
 
-            // Update view saying that new player has been conntected...
-            // TODO....
-
             // Send initial message to player saying that has been successfully conntected.
             this.updatePlayer();
 
@@ -195,6 +192,23 @@ public class Server {
 
                     this.updatePlayer();
 
+                    break;
+                // Set up a whole new game
+                case 3:
+
+                    this.animalCategory = new Animal();
+                    this.countryCategory = new Country();
+                    this.superheroCategory = new Superhero();
+                    this.currentCategory = null;
+                    this.wordGuessInfo = new WordGuessInfo();
+
+                    this.wordGuessInfo.connected = true;
+                    this.wordGuessInfo.processCode = 1;
+
+                    this.updatePlayer();
+
+                    break;
+                default:
                     break;
             }
         }
