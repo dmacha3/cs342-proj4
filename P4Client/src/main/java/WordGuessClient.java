@@ -28,9 +28,10 @@ public class WordGuessClient extends Application {
 	Socket socket;
 	Button startBtn, startClientBtn;
 	Button catOneBtn, catTwoBtn, catThreeBtn;
+	Button playAgnBtn, quitBtn;
 	Button sendGuessBtn;
 	TextField portNumTF, ipTF, guessTF;
-	Alert emptyPortError, emptyIPError, wrongPortOrIPError, duplicateLetterError;
+	Alert emptyPortError, emptyIPError, wrongPortOrIPError, duplicateLetterError, emptyLetterError;
 	ArrayList<String> letterColors;
 	ArrayList<Button> lettersList;
 
@@ -94,10 +95,17 @@ public class WordGuessClient extends Application {
 		duplicateLetterError.setHeaderText(null);
 		duplicateLetterError.setContentText("You have already chosen this letter");
 
+		//Empty letter chosen alert
+		emptyLetterError = new Alert(Alert.AlertType.INFORMATION);
+		emptyLetterError.setTitle("Letter was not picked");
+		emptyLetterError.setHeaderText(null);
+		emptyLetterError.setContentText("You have not chosen a letter yet");
+
 		sceneMap.put("Start", createStartScene());
 		sceneMap.put("Port", createPortAndIPScene());
 		sceneMap.put("Categories", createCategoryScene());
 		sceneMap.put("Game", createGameScene());
+		sceneMap.put("End", createEndScene());
 
 		guessTF.textProperty().addListener((observable, oldValue, newValue) -> {
 			if (!newValue.equals("") && !newValue.matches("\\sa-zA-Z*")) {
@@ -185,6 +193,12 @@ public class WordGuessClient extends Application {
 			if (!newValue.matches("\\d*")) {
 				portNumTF.setText(newValue.replaceAll("[^\\d]", ""));
 			}
+		});
+
+
+		quitBtn.setOnAction(e -> {
+			Platform.exit();
+			System.exit(0);
 		});
 
 		primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
@@ -573,7 +587,7 @@ public class WordGuessClient extends Application {
 		}
 
 		if (val.equals("")) {
-			System.out.println("got empty string!");
+			emptyLetterError.showAndWait();
 			return false;
 		}
 
@@ -746,6 +760,7 @@ public class WordGuessClient extends Application {
 			// Game is over, user did not guess word in one of three categories 3 times
 			case 8:
 				System.out.println("LOST WHOLE GAME === ADD NEW SCREEN");
+
 				;
 
 				break;
@@ -798,6 +813,40 @@ public class WordGuessClient extends Application {
 		}
 
 		totalRoundsWon++;
+
+	}
+
+
+	public Scene createEndScene(){
+		BorderPane pane = new BorderPane();
+		pane.setPadding(new Insets(70));
+		String style = "-fx-background-image: url('Images/bgWordsAtTop.jpg'); "  +
+				"-fx-background-size: 100% 100%;";
+		pane.setStyle(style);
+		playAgnBtn = new Button("Play Again?");
+		quitBtn = new Button("Quit?");
+		playAgnBtn.setMinSize(400, 80);
+		playAgnBtn.setMaxSize(400, 80);
+		quitBtn.setMinSize(400, 80);
+		quitBtn.setMaxSize(400, 80);
+
+		playAgnBtn.setStyle("    -fx-font-family: \"Helvetica\";\n" +
+				"    -fx-font-size: 40px;\n" +
+				"    -fx-text-fill: #ffffff;\n" +
+				" -fx-background-color: green;\n" +
+				"    -fx-font-weight: bold;\n");
+		quitBtn.setStyle("    -fx-font-family: \"Helvetica\";\n" +
+				"    -fx-font-size: 40px;\n" +
+				"    -fx-text-fill: #ffffff;\n" +
+				" -fx-background-color: green;\n" +
+				"    -fx-font-weight: bold;\n");
+
+		VBox choices = new VBox(20, playAgnBtn, quitBtn);
+		choices.setAlignment(Pos.CENTER);
+
+		pane.setCenter(choices);
+
+		return new Scene(pane,1280, 720);
 
 	}
 

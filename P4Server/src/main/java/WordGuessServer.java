@@ -121,7 +121,11 @@ public class WordGuessServer extends Application {
 				"-fx-background-size: 100% 100%;";
 		pane.setStyle(style);
 		startBtn = new Button("Start");
-		startBtn.setFont(Font.font("Arial", 30));
+		startBtn.setStyle("    -fx-font-family: \"Helvetica\";\n" +
+				"    -fx-font-size: 30px;\n" +
+				"    -fx-text-fill: #ffffff;\n" +
+				" -fx-background-color: green;\n" +
+				"    -fx-font-weight: bold;\n");
 		VBox center = new VBox(startBtn);
 		center.setAlignment(Pos.TOP_CENTER);
 		pane.setCenter(center);
@@ -135,15 +139,21 @@ public class WordGuessServer extends Application {
 				"-fx-background-size: 100% 100%;";
 		pane.setStyle(style);
 		portNumTF = new TextField();
-		Text enterText = new Text("Enter a port number to host at");
 		Text portText = new Text(" Port: ");
-		enterText.setFont(Font.font("Arial", 30));
-		portText.setFont(Font.font("Arial", 30));
+		portText.setStyle("    -fx-font-family: \"Helvetica\";\n" +
+				"    -fx-font-size: 20px;\n" +
+				"    -fx-fill: #ffffff;\n" +
+				"    -fx-font-weight: bold;\n");
+
 		startServerBtn = new Button("Start Server");
-		startServerBtn.setFont(Font.font("Arial", 30));
+		startServerBtn.setStyle("    -fx-font-family: \"Helvetica\";\n" +
+				"    -fx-font-size: 30px;\n" +
+				"    -fx-text-fill: #ffffff;\n" +
+				" -fx-background-color: green;\n" +
+				"    -fx-font-weight: bold;\n");
 		HBox portInfo = new HBox(5, portText, portNumTF);
 		portInfo.setAlignment(Pos.BOTTOM_CENTER);
-		VBox center = new VBox(10, enterText,portInfo, startServerBtn);
+		VBox center = new VBox(10, portInfo, startServerBtn);
 		center.setAlignment(Pos.CENTER);
 		pane.setCenter(center);
 		return new Scene(pane, 700, 500);
