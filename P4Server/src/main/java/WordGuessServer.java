@@ -11,7 +11,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.scene.text.Text;
 import javafx.stage.WindowEvent;
@@ -32,14 +31,12 @@ public class WordGuessServer extends Application {
 
 
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
 		launch(args);
 	}
 
 	// feel free to remove the starter code from this method
 	@Override
 	public void start(Stage primaryStage) throws Exception {
-		// TODO Auto-generated method stub
 
 		//Variables
 		sceneMap = new HashMap<String, Scene>();

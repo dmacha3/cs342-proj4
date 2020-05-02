@@ -7,9 +7,6 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.function.Consumer;
 
-import javafx.application.Platform;
-import javafx.scene.control.ListView;
-
 public class Server {
 
     ServerSocket mysocket;
