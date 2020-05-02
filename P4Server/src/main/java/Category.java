@@ -33,16 +33,16 @@ public abstract class Category {
             this.allWords.addAll(this.wordsUsed);
         }
 
-        // Set currentWord random words from allWords
-        // Random r = new Random();
-        // int randomIndex = r.nextInt(allWords.size());
-        // this.currentWord = this.allWords.get(randomIndex);
-        // this.wordsUsed.add(this.allWords.get(randomIndex));
-        // this.allWords.remove(randomIndex);
+         //Set currentWord random words from allWords
+         Random r = new Random();
+         int randomIndex = r.nextInt(allWords.size());
+         this.currentWord = this.allWords.get(randomIndex);
+         this.wordsUsed.add(this.allWords.get(randomIndex));
+         this.allWords.remove(randomIndex);
 
-        this.currentWord = this.allWords.get(0);
-        this.wordsUsed.add(this.allWords.get(0));
-        this.allWords.remove(0);
+//        this.currentWord = this.allWords.get(0);
+//        this.wordsUsed.add(this.allWords.get(0));
+//        this.allWords.remove(0);
 
     }
 
