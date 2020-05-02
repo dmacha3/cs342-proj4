@@ -1,5 +1,4 @@
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Random;
 
 public abstract class Category {
@@ -33,16 +32,12 @@ public abstract class Category {
             this.allWords.addAll(this.wordsUsed);
         }
 
-         //Set currentWord random words from allWords
-         Random r = new Random();
-         int randomIndex = r.nextInt(allWords.size());
-         this.currentWord = this.allWords.get(randomIndex);
-         this.wordsUsed.add(this.allWords.get(randomIndex));
-         this.allWords.remove(randomIndex);
-
-//        this.currentWord = this.allWords.get(0);
-//        this.wordsUsed.add(this.allWords.get(0));
-//        this.allWords.remove(0);
+        // Set currentWord random words from allWords
+        Random r = new Random();
+        int randomIndex = r.nextInt(allWords.size());
+        this.currentWord = this.allWords.get(randomIndex);
+        this.wordsUsed.add(this.allWords.get(randomIndex));
+        this.allWords.remove(randomIndex);
 
     }
 
@@ -107,7 +102,7 @@ public abstract class Category {
     }
 
     public boolean categoryFailed() {
-        if (this.wordsUsed.size() == 3) {
+        if (this.wordsUsed.size() == 4) {
             return true;
         }
 
@@ -121,7 +116,7 @@ public abstract class Category {
         }
     }
 
-    public int getNumberOfInvalidGuesses(){
+    public int getNumberOfInvalidGuesses() {
         return this.numberOfInvalidGuesses;
     }
 
