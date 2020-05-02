@@ -7,6 +7,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
@@ -42,10 +43,6 @@ public class WordGuessClient extends Application {
 
 
 	Text msg;
-
-
-
-
 	Pane p;
 
 	String passed = ""; // keeps track of which cateogires have been passed
@@ -54,6 +51,7 @@ public class WordGuessClient extends Application {
 
 	boolean roundOver = false;
 
+	boolean gameOver = false;
 	ArrayList<Character> lettersGuessed; // stores the letters guessed per turn
 	Text guessesLeft, guessesLeftNum;
 	Text totalGuessed, totalGuessedNum;
@@ -122,6 +120,15 @@ public class WordGuessClient extends Application {
 			}
 		});
 
+
+		guessTF.setOnKeyReleased(event -> {
+			if (event.getCode() == KeyCode.ENTER){
+				if (updateServer()) {
+
+				}
+			}
+		});
+
 		sendGuessBtn.setOnAction(e -> {
 			if (updateServer()) {
 				// sendGuessBtn.setDisable(true); //disable sending more info until server
@@ -157,9 +164,16 @@ public class WordGuessClient extends Application {
 									{
 										int previousTotal = totalRoundsWon;
 										processData((WordGuessInfo) data);
-										if (totalRoundsWon - previousTotal == 1 || roundOver) {
-											primaryStage.setScene(sceneMap.get("Categories"));
 
+										// 3 rounds won = win
+										if (totalRoundsWon == 3 || gameOver) {
+											primaryStage.setScene(sceneMap.get("End"));
+
+										}
+
+										// otherwise, if the user wins/loses a round we must get to categories
+										else if (totalRoundsWon - previousTotal == 1 || roundOver) {
+											primaryStage.setScene(sceneMap.get("Categories"));
 										}
 
 									}
@@ -170,6 +184,8 @@ public class WordGuessClient extends Application {
 				}
 			}
 		});
+
+
 
 		catOneBtn.setOnAction(e -> {
 			this.choseCategory("animal");
@@ -201,6 +217,24 @@ public class WordGuessClient extends Application {
 			System.exit(0);
 		});
 
+
+		playAgnBtn.setOnAction(e -> {
+			totalRoundsWon = 0;
+			msg.setText("You chose to play again! ");
+			gameOver = false;
+			passed = "";
+			roundOver = false;
+			catOneBtn.setDisable(false);
+			catTwoBtn.setDisable(false);
+			catThreeBtn.setDisable(false);
+			gameInfo = new WordGuessInfo(); // reset the game info object
+			resetUI();
+			primaryStage.setScene(sceneMap.get("Categories"));
+
+
+
+		});
+
 		primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
 			@Override
 			public void handle(WindowEvent t) {
@@ -216,67 +250,6 @@ public class WordGuessClient extends Application {
 		primaryStage.sizeToScene();
 		primaryStage.show();
 	}
-
-//	public Scene createStartScene() {
-//		BorderPane pane = new BorderPane();
-//		pane.setPadding(new Insets(400, 0, 0, 0));
-//		String style = "-fx-background-image: url('Images/bgWordsInMiddle.jpg'); " + "-fx-background-size: 100% 100%;";
-//		pane.setStyle(style);
-//		startBtn = new Button("Start");
-//		startBtn.setFont(Font.font("Arial", 30));
-//		VBox center = new VBox(startBtn);
-//		center.setAlignment(Pos.TOP_CENTER);
-//		pane.setCenter(center);
-//		return new Scene(pane, 800, 600);
-//	}
-//
-//	public Scene createPortAndIPScene() {
-//		BorderPane pane = new BorderPane();
-//		pane.setPadding(new Insets(70));
-//		String style = "-fx-background-image: url('Images/bgWordsAtTop.jpg'); " + "-fx-background-size: 100% 100%;";
-//		pane.setStyle(style);
-//		portNumTF = new TextField();
-//		ipTF = new TextField();
-//		Text enterIPText = new Text("Enter an IP Address");
-//		Text ipText = new Text(" IP Address:");
-//		Text enterPortText = new Text("Enter a port number");
-//		Text portText = new Text(" Port:");
-//		enterIPText.setFont(Font.font("Arial", 30));
-//		ipText.setFont(Font.font("Arial", 30));
-//		enterPortText.setFont(Font.font("Arial", 30));
-//		portText.setFont(Font.font("Arial", 30));
-//		startClientBtn = new Button("Start Client");
-//		startClientBtn.setFont(Font.font("Arial", 30));
-//		HBox portInfo = new HBox(5, portText, portNumTF);
-//		HBox ipInfo = new HBox(5, ipText, ipTF);
-//		ipInfo.setAlignment(Pos.CENTER);
-//		portInfo.setAlignment(Pos.CENTER);
-//		VBox center = new VBox(10, enterIPText, ipInfo, enterPortText, portInfo, startClientBtn);
-//		center.setAlignment(Pos.CENTER);
-//		pane.setCenter(center);
-//		return new Scene(pane, 800, 600);
-//	}
-//
-//	public Scene createCategoryScene() {
-//		BorderPane pane = new BorderPane();
-//		pane.setPadding(new Insets(70));
-//		String style = "-fx-background-image: url('Images/bgWordsAtTop.jpg'); " + "-fx-background-size: 100% 100%;";
-//		pane.setStyle(style);
-//		Text pickCatText = new Text("Please pick a category");
-//		pickCatText.setFont(Font.font("Arial", 30));
-//		catOneBtn = new Button("Animals");
-//		catTwoBtn = new Button("Countries");
-//		catThreeBtn = new Button("Super Heroes");
-//		catOneBtn.setFont(Font.font("Arial", 30));
-//		catTwoBtn.setFont(Font.font("Arial", 30));
-//		catThreeBtn.setFont(Font.font("Arial", 30));
-//		HBox categories = new HBox(20, catOneBtn, catTwoBtn, catThreeBtn);
-//		categories.setAlignment(Pos.CENTER);
-//		VBox center = new VBox(10, pickCatText, categories);
-//		center.setAlignment(Pos.CENTER);
-//		pane.setCenter(center);
-//		return new Scene(pane, 800, 600);
-//	}
 
 	public Scene createStartScene() {
 		BorderPane pane = new BorderPane();
@@ -307,19 +280,22 @@ public class WordGuessClient extends Application {
 
 		portNumTF = new TextField();
 		ipTF = new TextField();
-		Text ipText = new Text(" IP Address:");
-		Text portText = new Text(" Port:");
+		Text ipText = new Text("IP:");
+		Text portText = new Text("Port:");
 		ipText.setFont(Font.font("Arial", 30));
 		portText.setStyle("    -fx-font-family: \"Helvetica\";\n" +
-				"    -fx-font-size: 20px;\n" +
+				"    -fx-font-size: 50px;\n" +
 				"    -fx-fill: #ffffff;\n" +
 				"    -fx-font-weight: bold;\n");
 
 		ipText.setStyle("    -fx-font-family: \"Helvetica\";\n" +
-				"    -fx-font-size: 20px;\n" +
+				"    -fx-font-size: 50px;\n" +
 				"    -fx-fill: white;\n" +
 				"    -fx-font-weight: bold;\n");
 
+
+		ipTF.setStyle("-fx-font-size: 30px;");
+		portNumTF.setStyle("-fx-font-size: 30px;");
 
 		startClientBtn = new Button("Connect");
 		startClientBtn.setStyle("    -fx-font-family: \"Helvetica\";\n" +
@@ -331,9 +307,10 @@ public class WordGuessClient extends Application {
 		HBox ipInfo = new HBox(5, ipText, ipTF);
 
 		VBox txts = new VBox(5, ipText, portText);
+		txts.setAlignment(Pos.CENTER_RIGHT);
 		VBox tfs = new VBox(5, ipTF, portNumTF);
 
-		HBox startDetails = new HBox(txts, tfs);
+		HBox startDetails = new HBox(10, txts, tfs);
 		startDetails.setAlignment(Pos.CENTER);
 
 		VBox center = new VBox(10, startDetails, startClientBtn);
@@ -736,9 +713,7 @@ public class WordGuessClient extends Application {
 				updateWithNewInformation(false);
 				break;
 			case 5: // Whole game was won
-
-				System.out.println("WON WHOLE GAME === ADD NEW SCREEN");
-				msg.setText("You won the game");
+				gameOver = true;
 				break;
 
 
@@ -757,12 +732,9 @@ public class WordGuessClient extends Application {
 				msg.setText("You did not guess the word correctly");
 				resetUI();
 				break;
-			// Game is over, user did not guess word in one of three categories 3 times
-			case 8:
-				System.out.println("LOST WHOLE GAME === ADD NEW SCREEN");
+			case 8: // Game is over, user did not guess word in one of three categories 3 times
 
-				;
-
+				gameOver = true;
 				break;
 			default:
 				break;
