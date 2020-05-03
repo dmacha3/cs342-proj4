@@ -227,11 +227,12 @@ public class WordGuessClient extends Application {
 			catOneBtn.setDisable(false);
 			catTwoBtn.setDisable(false);
 			catThreeBtn.setDisable(false);
-			gameInfo = new WordGuessInfo(); // reset the game info object
 			resetUI();
 			primaryStage.setScene(sceneMap.get("Categories"));
 
-
+			// Update server
+			 gameInfo.processCode = 3;
+			 clientConnection.send(gameInfo);
 
 		});
 
