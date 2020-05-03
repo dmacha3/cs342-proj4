@@ -570,7 +570,7 @@ public class WordGuessClient extends Application {
 		}
 
 
-		if (lettersGuessed.contains(val.charAt(0))) {
+		if (lettersGuessed.contains(Character.toLowerCase(val.charAt(0)))){
 			duplicateLetterError.showAndWait();
 			return false;
 		}
@@ -578,10 +578,10 @@ public class WordGuessClient extends Application {
 		// here we know the input is valid and unique
 
 		System.out.println("sending the server letter " + val);
-		lettersGuessed.add(val.charAt(0));
+		lettersGuessed.add(Character.toLowerCase(val.charAt(0)));
 
 		// Send request to server
-		gameInfo.guessedLetter = val.charAt(0);
+		gameInfo.guessedLetter = Character.toLowerCase(val.charAt(0));
 		gameInfo.processCode = 2;
 		clientConnection.send(gameInfo);
 
